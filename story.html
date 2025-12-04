@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>日本の“都市と地方の支出構造差”データストーリー</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+      color: #222;
+    }
+
+    header {
+      background: #1f2933;
+      color: #fff;
+      padding: 24px 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* 上部ナビゲーション */
+    nav {
+      background: #111827;
+      color: #fff;
+      padding: 8px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    nav li {
+      margin: 0;
+    }
+
+    nav a {
+      display: inline-block;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      color: #e5e7eb;
+      text-decoration: none;
+      border-radius: 999px;
+      border: 1px solid #4b5563;
+    }
+
+    nav a:hover {
+      background: #374151;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 16px auto 40px;
+      padding: 0 12px 24px;
+    }
+
+    /* パネル一覧カード */
+    .panel-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .panel-card {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+      border: 1px solid #e5e7eb;
+    }
+
+    .panel-card h3 {
+      margin: 0 0 4px;
+      font-size: 0.95rem;
+    }
+
+    .panel-card p {
+      margin: 0 0 8px;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .panel-card a {
+      display: inline-block;
+      font-size: 0.8rem;
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #3b82f6;
+      color: #1d4ed8;
+    }
+
+    .panel-card a:hover {
+      background: #eff6ff;
+    }
+
+    /* パネル本体 */
+    section.panel {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 18px 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+      border: 1px solid #e5e7eb;
+    }
+
+    section.panel h2 {
+      margin-top: 0;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    section.panel h2 span {
+      font-size: 0.8rem;
+      font-weight: normal;
+      color: #6b7280;
+      margin-left: 6px;
+    }
+
+    .panel-subtitle {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .panel-message {
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .panel-visual {
+      margin: 8px 0 4px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    .panel-visual img, .panel-visual iframe {
+      max-width: 100%;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .panel-notes {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .back-to-top {
+      text-align: right;
+      margin-top: 8px;
+    }
+
+    .back-to-top a {
+      font-size: 0.75rem;
+      text-decoration: none;
+      color: #6b7280;
+    }
+
+    .back-to-top a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      padding-bottom: 16px;
+    }
+
+    .panel-two-images {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .panel-two-images img {
+      width: 48%;
+      border-radius: 6px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header id="top">
+    <h1>日本の“都市と地方の支出構造差”データストーリー</h1>
+    <p>仮説：人口密度が、地域の“生活装備（Living Equipment）”を決め、その違いが家計の支出構造を生み出す。</p>
+  </header>
+
+  <!-- 上部ナビ（パネルへのショートカット） -->
+  <nav>
+    <ul>
+      <li><a href="#panel1">Panel 1</a></li>
+      <li><a href="#panel2">Panel 2</a></li>
+      <li><a href="#panel3">Panel 3</a></li>
+      <li><a href="#panel4">Panel 4</a></li>
+      <li><a href="#panel5">Panel 5</a></li>
+      <li><a href="#panel6">Panel 6</a></li>
+      <li><a href="#panel7">Panel 7</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <!-- パネル一覧カード：ここから好きなパネルへ飛べる -->
+    <section>
+      <h2 style="font-size:1rem; margin-top:8px;">パネル一覧（概要）</h2>
+      <div class="panel-grid">
+        <div class="panel-card">
+          <h3>Panel 1：Japan Population Landscape 2020</h3>
+          <p>日本の人口“山脈”を俯瞰し、どこに人が集まり、どこがスカスカなのかを確認する。</p>
+          <a href="#panel1">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 2：Urban Peaks（都市の山脈）</h3>
+          <p>東京・大阪・名古屋の3大人口ピークにズームし、「都市の生活装備」が必要になるエリアを観察。</p>
+          <a href="#panel2">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 3：Rural Plains（地方の平野）</h3>
+          <p>東北・四国・山陰など、低密度の“人口平野”を見て、車や広い住宅といった「地方の生活装備」をイメージする。</p>
+          <a href="#panel3">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 4：人はどこで、何にお金を使うのか？</h3>
+          <p>食料・住居・交通・教育など、生活装備によって変わる家計支出カテゴリを導入する。</p>
+          <a href="#panel4">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 5：Density drives spending structure</h3>
+          <p>人口密度と住居費・教育費・交通費の関係をプロットし、「密度が生活装備と支出を動かす」という仮説を検証。</p>
+          <a href="#panel5">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 6：Case Comparison：Tokyo vs Akita</h3>
+          <p>都市と地方の代表として東京都と秋田県を比較し、生活装備の違いが支出の形にどう現れるかを見る。</p>
+          <a href="#panel6">このパネルを見る →</a>
+        </div>
+        <div class="panel-card">
+          <h3>Panel 7：仮説の整理</h3>
+          <p>「人口地形が生活装備を分け、その結果として支出構造が分かれる」という結論をまとめる。</p>
+          <a href="#panel7">このパネルを見る →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Panel 1 -->
+    <section id="panel1" class="panel">
+      <h2>Panel 1：Japan Population Landscape 2020 <span>日本の人口地形</span></h2>
+      <div class="panel-subtitle">
+        日本は「人口山脈」を持つ国であり、その高さが「どこで都市的な生活装備が必要になるか」を示している。
+      </div>
+      <div class="panel-visual">
+        <iframe
+          src="output/japan_3d_population.html"
+          width="100%"
+          height="520"
+          style="border:none; border-radius:10px;"
+        ></iframe>
+      </div>
+      <div class="panel-message">
+        東京・大阪・名古屋などの“人口山脈”と、東北や四国の“人口平野”。  
+        この地形の違いが、公共交通・高家賃・自家用車・広い住宅など、地域ごとに必要とされる
+        <strong>生活装備（Living Equipment）</strong> を分ける出発点になっている、という仮説をここで置く。
+      </div>
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 2 -->
+    <section id="panel2" class="panel">
+      <h2>Panel 2：Urban Peaks（都市の山脈） <span>東京・大阪・名古屋</span></h2>
+      <div class="panel-visual">
+        <img
+          src="スクリーンショット 2025-12-03 131922.png"
+          alt="東京・大阪・愛知の都市人口ピーク"
+        >
+      </div>
+      <div class="panel-message">
+        東京は圧倒的に高い人口ピークを持ち、大阪・名古屋にも似た山が見える。  
+        このような高密度なエリアでは、自家用車よりも<strong>公共交通</strong>が合理的で、  
+        限られた土地に住むための<strong>高家賃の住宅</strong>が必須の生活装備になる。
+      </div>
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 3 -->
+    <section id="panel3" class="panel">
+      <h2>Panel 3：Rural Plains（地方の平野） <span>東北・四国・山陰など</span></h2>
+      <div class="panel-visual">
+        <img
+          src="地方図.png"
+          alt="東北・四国・山陰などの地方人口平野"
+        >
+      </div>
+      <div class="panel-message">
+        高いスパイクがほとんどない、なだらかな人口地形。  
+        広い土地に低密度で暮らす地域では、日常生活の移動に<strong>自家用車</strong>が必須になり、  
+        その代わり、土地が広いぶん<strong>住宅コストは抑えられる</strong>。  
+        ここで必要とされる生活装備は、都市とは根本的に異なっている。
+      </div>
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 4 -->
+    <section id="panel4" class="panel">
+      <h2>Panel 4：人はどこで、何にお金を使うのか？ <span>支出カテゴリの導入</span></h2>
+
+      <div class="panel-message">
+        <p>
+          この仮説を確かめるために、まず「何にお金を使っているか」を分解する。
+          日本の家計支出は「食料」「住居」「交通・通信」「教育」「教養娯楽」など、
+          いくつかの基本カテゴリで構成されている。
+        </p>
+
+        <p>
+          高密度な都市では、生活装備として<strong>高家賃の住宅・公共交通・教育投資</strong>が重くなり、  
+          低密度な地方では、<strong>自家用車・広い住宅・生活必需品</strong>のコストが効いてくるはずだ、というのが事前の仮説である。
+        </p>
+
+        <p>
+          このパネルのグラフでは、三つの地域グループ（大都市圏／地方中核／その他地方）について、  
+          それぞれの支出カテゴリの<strong>金額</strong>を比較し、生活装備の違いがどのカテゴリに現れているのかを眺める。
+        </p>
+
+        <img
+          src="カテゴリ別金.png"
+          alt="大都市圏・地方中核・その他地方のカテゴリ別支出金額の比較グラフ"
+          style="max-width: 100%; margin-top: 20px;"
+        >
+      </div>
+
+      <div class="panel-visual">
+        <!-- 補足用のスペース（必要なら小図など） -->
+      </div>
+
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 5（人口密度×支出） -->
+    <section id="panel5" class="panel">
+      <h2>Panel 5：人口密度が支出構造をどう変えるか
+        <span>Density drives spending structure</span>
+      </h2>
+
+      <div class="panel-message">
+        <p>
+          ここでは、仮説の中心である「人口密度と支出構造の関係」を直接チェックする。  
+          都道府県ごとの人口密度（人/km²）と、住居費・教育費・交通通信費の月あたり支出額を散布図にし、
+          色で「大都市圏」「地方中核」「その他地方」を区別した。
+        </p>
+        <p>
+          緑色の大都市圏は右上に集中しており、人口密度が高い地域ほど
+          <strong>住居費・教育費・交通通信費が上昇する</strong> 傾向がはっきりと見える。  
+          これは、人口が集中した場所ほど「公共交通＋高家賃＋教育投資」という
+          都市型の生活装備が必要になる、という仮説と整合的である。
+        </p>
+      </div>
+
+      <div class="panel-visual">
+        <iframe
+          src="panel7_interactive.html"
+          width="100%"
+          height="650"
+          style="border:none; border-radius: 8px;"
+        ></iframe>
+      </div>
+
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 6：ケース比較 -->
+    <section id="panel6" class="panel">
+      <h2>Panel 6：都道府県間の支出構造比較（Tokyo vs Akita）</h2>
+
+      <div class="panel-message">
+        <p>
+          仮説をより直感的に理解するために、都市と地方の代表として
+          <strong>東京都</strong>と<strong>秋田県</strong>の支出構造を比較したイメージを示す。
+          本来は、任意の2都道府県をプルダウンで選べるインタラクティブツールとして設計している。
+        </p>
+        <p>
+          東京都では<strong>住居費</strong>や<strong>教育費</strong>が高く、
+          秋田県では<strong>交通・通信費（= 自家用車中心）</strong>の比重が高い。  
+          これは、都市では「公共交通＋高家賃」という装備に、地方では「自家用車＋広い住宅」という装備に
+          家計が縛られていることを示している。
+        </p>
+      </div>
+
+      <div class="panel-visual" style="text-align: center;">
+        <img
+          src="県比較.png"
+          alt="東京都と秋田県の支出構造比較グラフ（インタラクティブツールの画面イメージ）"
+          style="max-width: 100%; height: auto; border-radius: 8px;"
+        >
+      </div>
+
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <!-- Panel 7：まとめ -->
+    <section id="panel7" class="panel">
+      <h2>Panel 7：仮説の整理 <span>人口地形と生活装備で読む、日本の支出構造</span></h2>
+      <div class="panel-message">
+        <p>
+          このデータストーリーでは、最初に
+          <strong>「人口密度が、地域の“生活装備（Living Equipment）”を決め、その違いが家計の支出構造を生み出す」</strong>
+          という仮説を置いた。
+        </p>
+        <p>
+          3D人口地形から見えた「人口山脈」と「人口平野」、  
+          カテゴリ別支出、人口密度と支出額の相関、東京と秋田のケース比較を通じて、次のように整理できる。
+        </p>
+        <ul>
+          <li>都市（人口山脈）：公共交通＋高家賃＋教育投資という<strong>都市型の生活装備</strong>により、住居費・教育費・交通費が高くなる。</li>
+          <li>地方（人口平野）：自家用車＋広い住宅という<strong>車社会型の生活装備</strong>により、交通費（車）や生活必需品の比重が高く、住居費は抑えられる。</li>
+        </ul>
+        <p>
+          つまり、日本の「都市と地方の支出構造差」は、単なる物価差ではなく、  
+          <strong>人口地形が決める生活装備の違い</strong>として理解できる。  
+          人口“山脈”の構造こそが、日本の生活コストを決定している、というのがこのストーリーの結論である。
+        </p>
+      </div>
+      <div class="panel-notes">
+        
+      </div>
+      <div class="back-to-top"><a href="#top">▲ 一番上へ戻る</a></div>
+    </section>
+
+    <footer>
+      &copy; 日本の“都市と地方の支出構造差”データストーリー
+    </footer>
+  </main>
+
+</body>
+</html>
